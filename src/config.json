@@ -1,0 +1,33 @@
+{
+  "name": "Unbounce Trigger",
+  "type": "trigger",
+  "execProgram": "node",
+  "main": "app.js",
+  "imgUrl": "logo.png",
+  "version": "1.0.1",
+  "description": "Handles Unbounce webhooks",
+  "methods": [
+    {
+      "name": "webhookSubmit",
+      "route": "post /webhook/unbounce/submit",
+      "viewName": "Form Submit",
+      "params": [
+        {
+          "name": "pageName",
+          "viewName": "Page Name Pattern",
+          "type": "string"
+        },
+        {
+          "name": "pageUrl",
+          "viewName": "Page URL Pattern",
+          "type": "string"
+        },
+        {
+          "name": "variant",
+          "viewName": "Variant",
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}
