@@ -20,7 +20,7 @@ function exec(trigger, body, io, description) {
   return () => {
     console.log(trigger.map);
     let message = `${trigger.name} - ${description}`
-    console.log(`******** Pingdom: executing map ${trigger.map} ********`);
+    console.log(`******** Unbounce: executing map ${trigger.map} ********`);
     mapExecutionService.execute(
       trigger.map,
       null,
