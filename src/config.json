@@ -1,10 +1,10 @@
 {
-  "name": "Unbounce Trigger",
+  "name": "Unbounce-Trigger",
   "type": "trigger",
   "execProgram": "node",
   "main": "app.js",
   "imgUrl": "logo.png",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Handles Unbounce webhooks",
   "methods": [
     {
