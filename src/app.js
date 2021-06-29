@@ -1,43 +1,35 @@
-const { findTriggers } = require(`./helpers`);
 const minimatch = require("minimatch");
 
-async function webhookSubmit(req, res) {
-  const body = req.body;
+async function webhookSubmit(req, res, settings, triggerControllers) {
+  try { 
+    const body = req.body;
+    
+    const {page_name: reqPName, page_url: reqPUrl, variant: reqVariant} = body;
+    if (!reqPName || !reqPUrl || !reqVariant){
+      return res.status(400).send("Bad Check Format");
+    }
+    console.error("Test");
 
-  const pageName = body.page_name;
-  const pageUrl = body.page_url;
-  const variant = body.variant;
+    triggerControllers.forEach(trigger => {
+        const {pageName, pageUrl, variant} = trigger.params;
 
-  findTriggers(
-    JSON.parse(body["data.json"]),
-    validateTrigger,
-    [ pageName, pageUrl, variant ],
-    req, res,
-    "webhookSubmit",
-    `'${pageName}' submitted`
-  );
-}
+        console.error("Test1");
+        if (pageName && !minimatch(reqPName, pageName)) return;
+        
+        console.error("Test2");
+        if (pageUrl && !minimatch(reqPUrl, pageUrl)) return;
+        
+        console.error("Test3");
+        if (variant && reqVariant !== variant) return;
 
-async function validateTrigger(trigger, [ pageName, pageUrl, variant ]) {
-  const pageNamePat = (trigger.params.find((o) => o.name === `pageName`).value || "").trim();
-  const pageUrlPat = (trigger.params.find((o) => o.name === `pageUrl`).value || "").trim();
-  const triggerVariant = (trigger.params.find((o) => o.name === `variant`).value || "").trim();
-
-  // Check if the page name pattern was provided, and if so check it matches request
-  if (pageNamePat && !minimatch(pageName, pageNamePat)) {
-    throw `Not same page name`;
+        console.error("Test4");
+        console.error(trigger.execute(`${reqPName} Submitted`, JSON.parse(body["data.json"])));
+    });
+    res.status(200).send("OK");
   }
-
-  // Check if the page URL pattern was provided, and if so check it matches request
-  if (pageUrlPat && !minimatch(pageUrl, pageUrlPat)) {
-    throw `Not same page URL`;
+  catch (err){
+    res.status(422).send(err.message);
   }
-
-  if (triggerVariant && triggerVariant !== variant){
-    throw `Not same variant`;
-  }
-
-  return true;
 }
 
 module.exports = { 
